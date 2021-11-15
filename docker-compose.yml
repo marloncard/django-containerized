@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  web:
+    # build image using dockerfile in root dir
+    build: .
+    command: ./manage.py runserver 0.0.0.0:${APP_PORT}
+    # command: sh -c "python manage.py makemigrations &&
+    #                 python manage.py migrate &&
+    #                 gunicorn sample_app.wsgi:application --bind 0.0.0.0:${APP_PORT}"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    # Name of image
+    image: django_app
+    # Expose port to other services defined here
+    expose:
+      - ${APP_PORT}
+    depends_on:
+      - db
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data:z
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - PGPORT=${PGPORT}
