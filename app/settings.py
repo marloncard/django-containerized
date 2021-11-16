@@ -26,7 +26,7 @@ SECRET_KEY = '2ww488ozei#00ydlv@7p443zm#g7*w1%q4ltb%jxqx_w2xx543'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -84,6 +84,13 @@ DATABASES = {
         'PORT': os.environ['PGPORT'],
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation

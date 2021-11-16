@@ -3,7 +3,9 @@ version: "3.9"
 services:
   web:
     # build image using dockerfile in root dir
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.app
     command: ./manage.py runserver 0.0.0.0:${APP_PORT}
     # command: sh -c "python manage.py makemigrations &&
     #                 python manage.py migrate &&
@@ -14,17 +16,22 @@ services:
       - .env
     # Name of image
     image: django_app
-    # Expose port to other services defined here
-    expose:
-      - ${APP_PORT}
+    # Expose ports to other services defined here & host machine - HOST:CONTAINER
+    ports:
+      - ${APP_PORT}:${APP_PORT}
     depends_on:
       - db
   db:
     image: postgres
     volumes:
-      - ./data/db:/var/lib/postgresql/data:z
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
       - PGPORT=${PGPORT}
+    # Expose port to other services defined here
+    expose:
+      - ${PGPORT}
+volumes:
+  postgres_data:
